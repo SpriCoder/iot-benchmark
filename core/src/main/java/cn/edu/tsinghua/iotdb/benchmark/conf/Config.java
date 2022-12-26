@@ -28,6 +28,7 @@ import cn.edu.tsinghua.iotdb.benchmark.mode.enums.BenchmarkMode;
 import cn.edu.tsinghua.iotdb.benchmark.tsdb.DBConfig;
 import cn.edu.tsinghua.iotdb.benchmark.tsdb.enums.DBSwitch;
 import cn.edu.tsinghua.iotdb.benchmark.workload.enums.OutOfOrderMode;
+import cn.edu.tsinghua.iotdb.benchmark.workload.enums.TimeMode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -292,6 +293,8 @@ public class Config {
   /** The max K of Poisson random variable based on basic model */
   private int MAX_K = 170000;
 
+  private boolean USE_REAL = false;
+  private TimeMode TIME_MODE = TimeMode.ABS;
   private double SIGMA = 1.0;
   private double MU = 0;
 
@@ -1185,6 +1188,22 @@ public class Config {
 
   public void setMAX_K(int MAX_K) {
     this.MAX_K = MAX_K;
+  }
+
+  public boolean isUSE_REAL() {
+    return USE_REAL;
+  }
+
+  public void setUSE_REAL(boolean USE_REAL) {
+    this.USE_REAL = USE_REAL;
+  }
+
+  public TimeMode getTIME_MODE() {
+    return TIME_MODE;
+  }
+
+  public void setTIME_MODE(TimeMode TIME_MODE) {
+    this.TIME_MODE = TIME_MODE;
   }
 
   public double getSIGMA() {

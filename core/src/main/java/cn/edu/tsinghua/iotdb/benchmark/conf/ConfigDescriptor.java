@@ -25,6 +25,7 @@ import cn.edu.tsinghua.iotdb.benchmark.tsdb.enums.DBSwitch;
 import cn.edu.tsinghua.iotdb.benchmark.tsdb.enums.DBType;
 import cn.edu.tsinghua.iotdb.benchmark.tsdb.enums.DBVersion;
 import cn.edu.tsinghua.iotdb.benchmark.workload.enums.OutOfOrderMode;
+import cn.edu.tsinghua.iotdb.benchmark.workload.enums.TimeMode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -372,6 +373,10 @@ public class ConfigDescriptor {
         config.setLAMBDA(
             Double.parseDouble(properties.getProperty("LAMBDA", config.getLAMBDA() + "")));
         config.setMAX_K(Integer.parseInt(properties.getProperty("MAX_K", config.getMAX_K() + "")));
+        config.setUSE_REAL(
+            Boolean.parseBoolean(properties.getProperty("USE_REAL", config.isUSE_REAL() + "")));
+        config.setTIME_MODE(
+            TimeMode.getTimeMode(properties.getProperty("TIME_MODE", config.getTIME_MODE() + "")));
         config.setSIGMA(
             Double.parseDouble(properties.getProperty("SIGMA", config.getSIGMA() + "")));
         config.setMU(Double.parseDouble(properties.getProperty("MU", config.getMU() + "")));

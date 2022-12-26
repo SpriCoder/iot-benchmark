@@ -36,17 +36,21 @@ public abstract class DataWorkLoad implements IDataWorkLoad {
   protected long currentTimestamp = 0;
 
   public static IDataWorkLoad getInstance(int clientId) {
-    if (config.getBENCHMARK_WORK_MODE() == BenchmarkMode.TEST_WITH_DEFAULT_PATH
-        || config.getBENCHMARK_WORK_MODE() == BenchmarkMode.VERIFICATION_WRITE
+    if (config.getBENCHMARK_WORK_MODE() == BenchmarkMode.VERIFICATION_WRITE
         || config.getBENCHMARK_WORK_MODE() == BenchmarkMode.VERIFICATION_QUERY) {
       List<String> files = MetaUtil.getClientFiles().get(clientId);
       return new RealDataWorkLoad(files);
     } else {
-      List<DeviceSchema> deviceSchemas = metaDataSchema.getDeviceSchemaByClientId(clientId);
-      if (config.isIS_CLIENT_BIND()) {
-        return new SyntheticDataWorkLoad(deviceSchemas);
+      if (config.isUSE_REAL()) {
+        List<String> files = MetaUtil.getClientFiles().get(clientId);
+        return new RealDataWorkLoad(files);
       } else {
-        return SingletonWorkDataWorkLoad.getInstance();
+        List<DeviceSchema> deviceSchemas = metaDataSchema.getDeviceSchemaByClientId(clientId);
+        if (config.isIS_CLIENT_BIND()) {
+          return new SyntheticDataWorkLoad(deviceSchemas);
+        } else {
+          return SingletonWorkDataWorkLoad.getInstance();
+        }
       }
     }
   }
