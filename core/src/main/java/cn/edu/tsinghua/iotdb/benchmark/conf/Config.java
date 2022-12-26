@@ -294,7 +294,7 @@ public class Config {
   private int MAX_K = 170000;
 
   private boolean USE_REAL = false;
-  private TimeMode TIME_MODE = TimeMode.ABS;
+  private TimeMode TIME_MODE = TimeMode.NONE;
   private double SIGMA = 1.0;
   private double MU = 0;
 

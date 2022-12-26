@@ -23,6 +23,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public enum TimeMode {
+  NONE,
   ABS,
   NORMAL;
 
@@ -35,8 +36,8 @@ public enum TimeMode {
       }
     }
 
-    LOGGER.warn("Unknown time mode: " + name + ", use abs.");
-    return TimeMode.ABS;
+    LOGGER.warn("Unknown time mode: " + name + ", use none.");
+    return TimeMode.NONE;
   }
 
   @Override
