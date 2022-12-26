@@ -99,13 +99,16 @@ public abstract class MetaDataSchema {
       synchronized (MetaDataSchema.class) {
         if (metaDataSchema == null) {
           switch (config.getBENCHMARK_WORK_MODE()) {
-            case TEST_WITH_DEFAULT_PATH:
             case VERIFICATION_WRITE:
             case VERIFICATION_QUERY:
               metaDataSchema = new RealMetaDataSchema();
               break;
             default:
-              metaDataSchema = new GenerateMetaDataSchema();
+              if (config.isUSE_REAL()) {
+                metaDataSchema = new RealMetaDataSchema();
+              } else {
+                metaDataSchema = new GenerateMetaDataSchema();
+              }
               break;
           }
         }
