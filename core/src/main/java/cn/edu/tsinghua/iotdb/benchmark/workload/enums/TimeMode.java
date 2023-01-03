@@ -25,7 +25,7 @@ import org.slf4j.LoggerFactory;
 public enum TimeMode {
   NONE,
   ABS,
-  NORMAL;
+  LOG;
 
   private static final Logger LOGGER = LoggerFactory.getLogger(TimeMode.class);
 

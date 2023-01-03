@@ -131,9 +131,22 @@ public abstract class GenerateDataWorkLoad extends DataWorkLoad {
       timestamp += config.getPOINT_STEP() * timestampRandom.nextDouble();
     }
     long currentTimestamp = Constants.START_TIMESTAMP * timeStampConst + offset + timestamp;
-    double result =
-        Math.exp(timestampRandom.nextGaussian() * Math.sqrt(config.getSIGMA()) + config.getMU());
-    //  Math.abs(timestampRandom.nextGaussian() * Math.sqrt(config.getSIGMA()) + config.getMU());
+    double result;
+    switch (config.getTIME_MODE()) {
+      case ABS:
+        result =
+            Math.exp(
+                timestampRandom.nextGaussian() * Math.sqrt(config.getSIGMA()) + config.getMU());
+        break;
+      case LOG:
+        result =
+            Math.abs(
+                timestampRandom.nextGaussian() * Math.sqrt(config.getSIGMA()) + config.getMU());
+        break;
+      default:
+        result = 0;
+        break;
+    }
     currentTimestamp += result * config.getPOINT_STEP();
     if (config.isIS_RECENT_QUERY()) {
       this.currentTimestamp = Math.max(this.currentTimestamp, currentTimestamp);
