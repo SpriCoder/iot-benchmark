@@ -135,12 +135,12 @@ public abstract class GenerateDataWorkLoad extends DataWorkLoad {
     switch (config.getTIME_MODE()) {
       case ABS:
         result =
-            Math.exp(
+            Math.abs(
                 timestampRandom.nextGaussian() * Math.sqrt(config.getSIGMA()) + config.getMU());
         break;
       case LOG:
         result =
-            Math.abs(
+            Math.exp(
                 timestampRandom.nextGaussian() * Math.sqrt(config.getSIGMA()) + config.getMU());
         break;
       default:
