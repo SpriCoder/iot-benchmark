@@ -76,8 +76,8 @@ public class IoTDB implements IDatabase {
 
   public IoTDB(DBConfig dbConfig) {
     this.dbConfig = dbConfig;
-    ROOT_SERIES_NAME = "root." + dbConfig.getDB_NAME();
-    DELETE_SERIES_SQL = "delete storage group root." + dbConfig.getDB_NAME();
+    ROOT_SERIES_NAME = "root";
+    DELETE_SERIES_SQL = "delete storage group root.*";
   }
 
   @Override
