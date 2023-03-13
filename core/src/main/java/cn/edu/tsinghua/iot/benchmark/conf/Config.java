@@ -500,22 +500,8 @@ public class Config {
 
   /** According to the number of sensors, initialize the sensor number */
   void initSensorCodes() {
-    int TYPE_NUMBER = 6;
-    double[] probabilities = generateProbabilities(TYPE_NUMBER);
-    if (probabilities == null) {
-      return;
-    }
-    for (int sensorIndex = 0; sensorIndex < SENSOR_NUMBER; sensorIndex++) {
-      double sensorPosition = (sensorIndex + 1) * 1.0 / SENSOR_NUMBER;
-      int i;
-      for (i = 1; i <= TYPE_NUMBER; i++) {
-        if (sensorPosition > probabilities[i - 1] && sensorPosition <= probabilities[i]) {
-          break;
-        }
-      }
-      Sensor sensor = new Sensor(SENSOR_NAME_PREFIX + sensorIndex, SensorType.getType(i - 1));
-      SENSORS.add(sensor);
-    }
+    SENSORS.add(new Sensor("v", SensorType.FLOAT));
+    SENSORS.add(new Sensor("q", SensorType.INT32));
   }
 
   /** Generate Probabilities according to proportion(e.g. 1:1:1:1:1:1) */
