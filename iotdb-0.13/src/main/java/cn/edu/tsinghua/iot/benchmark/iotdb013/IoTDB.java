@@ -203,10 +203,8 @@ public class IoTDB implements IDatabase {
           registerStorageGroups(pair.getKey(), pair.getValue());
         }
         schemaBarrier.await();
-        if (!config.isTEMPLATE()) {
-          for (Map.Entry<Session, List<TimeseriesSchema>> pair : sessionListMap.entrySet()) {
-            registerTimeseries(pair.getKey(), pair.getValue());
-          }
+        for (Map.Entry<Session, List<TimeseriesSchema>> pair : sessionListMap.entrySet()) {
+          registerTimeseries(pair.getKey(), pair.getValue());
         }
       } catch (Exception e) {
         throw new TsdbException(e);
@@ -328,7 +326,13 @@ public class IoTDB implements IDatabase {
     // create time series
     for (TimeseriesSchema timeseriesSchema : timeseriesSchemas) {
       try {
-        if (config.isVECTOR()) {
+        if (config.isTEMPLATE()) {
+          String deviceId = timeseriesSchema.getDeviceId();
+          metaSession.executeNonQueryStatement(
+              "set schema template " + TEMPLATE_NAME + " to " + deviceId);
+          metaSession.executeNonQueryStatement(
+              "create timeseries of schema template on" + deviceId);
+        } else if (config.isVECTOR()) {
           metaSession.createAlignedTimeseries(
               timeseriesSchema.getDeviceId(),
               timeseriesSchema.getPaths(),
