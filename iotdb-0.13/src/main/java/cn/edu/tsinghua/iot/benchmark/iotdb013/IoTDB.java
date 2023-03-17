@@ -191,6 +191,7 @@ public class IoTDB implements IDatabase {
           if (config.isTEMPLATE() && schemaList.size() > 0) {
             template = createTemplate(schemaList.get(0));
           }
+          LOGGER.error("Register Template");
           start = System.nanoTime();
           int sessionIndex = random.nextInt(sessionListMap.size());
           Session templateSession = new ArrayList<>(sessionListMap.keySet()).get(sessionIndex);
@@ -329,9 +330,7 @@ public class IoTDB implements IDatabase {
         if (config.isTEMPLATE()) {
           String deviceId = timeseriesSchema.getDeviceId();
           metaSession.executeNonQueryStatement(
-              "set schema template " + TEMPLATE_NAME + " to " + deviceId);
-          metaSession.executeNonQueryStatement(
-              "create timeseries of schema template on" + deviceId);
+              "create timeseries of schema template on " + deviceId);
         } else if (config.isVECTOR()) {
           metaSession.createAlignedTimeseries(
               timeseriesSchema.getDeviceId(),

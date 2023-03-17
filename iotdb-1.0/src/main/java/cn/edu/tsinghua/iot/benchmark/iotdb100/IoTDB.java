@@ -329,9 +329,7 @@ public class IoTDB implements IDatabase {
         if (config.isTEMPLATE()) {
           String deviceId = timeseriesSchema.getDeviceId();
           metaSession.executeNonQueryStatement(
-              "set schema template " + TEMPLATE_NAME + " to " + deviceId);
-          metaSession.executeNonQueryStatement(
-              "create timeseries of schema template on" + deviceId);
+              "create timeseries of schema template on " + deviceId);
         } else {
           if (config.isVECTOR()) {
             metaSession.createAlignedTimeseries(
