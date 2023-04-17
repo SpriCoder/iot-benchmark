@@ -49,6 +49,12 @@ public class Constants {
   public static final String HASH_SG_ASSIGN_MODE = "hash";
   public static final String DIV_SG_ASSIGN_MODE = "div";
 
+  public static final String IOTDB110_JDBC_CLASS = "cn.edu.tsinghua.iot.benchmark.iotdb110.IoTDB";
+  public static final String IOTDB110_SESSION_CLASS =
+      "cn.edu.tsinghua.iot.benchmark.iotdb110.IoTDBSession";
+  public static final String IOTDB110_ROUNDROBIN_SESSION_CLASS =
+      "cn.edu.tsinghua.iot.benchmark.iotdb110.IoTDBClusterSession";
+
   public static final String IOTDB100_JDBC_CLASS = "cn.edu.tsinghua.iot.benchmark.iotdb100.IoTDB";
   public static final String IOTDB100_SESSION_CLASS =
       "cn.edu.tsinghua.iot.benchmark.iotdb100.IoTDBSession";
@@ -88,4 +94,5 @@ public class Constants {
   public static final String SQLITE_CLASS = "cn.edu.tsinghua.iot.benchmark.sqlite.SqliteDB";
   public static final String PI_ARCHIVE_CLASS = "cn.edu.tsinghua.iot.benchmark.piarchive.PIArchive";
   public static final String IGINX_CLASS = "cn.edu.tsinghua.iot.benchmark.iginx.IginX";
+  public static final String SELF_CHECK_CLASS = "cn.edu.tsinghua.iot.benchmark.tsdb.self.SelfCheck";
 }

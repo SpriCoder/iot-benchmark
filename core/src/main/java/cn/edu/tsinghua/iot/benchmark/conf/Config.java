@@ -125,7 +125,7 @@ public class Config {
   // 时间戳
   /** The interval of timestamp(not real rate) */
   private long POINT_STEP = 5000L;
-  /** The precision of timestamp, currently support ms and us */
+  /** The precision of timestamp, currently support ns, ms and us */
   private String TIMESTAMP_PRECISION = "ms";
 
   // 数据
@@ -242,6 +242,12 @@ public class Config {
   // 被测系统是TimescaleDB Cluster时的参数
   /** the replication factor of timescaledb cluster */
   private int TIMESCALEDB_REPLICATION_FACTOR = 1;
+
+  // 被测系统是TDengine 3时的参数
+  /** the wal level of tdegine */
+  private int TDENGINE_WAL_LEVEL = 2;
+  /** the replica number of tdegine */
+  private int TDENGINE_REPLICA = 0;
 
   // Operation 相关参数
   /**
@@ -500,10 +506,10 @@ public class Config {
       return;
     }
     for (int sensorIndex = 0; sensorIndex < SENSOR_NUMBER; sensorIndex++) {
-      double sensorPosition = sensorIndex * 1.0 / SENSOR_NUMBER;
+      double sensorPosition = (sensorIndex + 1) * 1.0 / SENSOR_NUMBER;
       int i;
       for (i = 1; i <= TYPE_NUMBER; i++) {
-        if (sensorPosition >= probabilities[i - 1] && sensorPosition < probabilities[i]) {
+        if (sensorPosition > probabilities[i - 1] && sensorPosition <= probabilities[i]) {
           break;
         }
       }
@@ -1456,6 +1462,22 @@ public class Config {
     this.TIMESCALEDB_REPLICATION_FACTOR = TIMESCALEDB_REPLICATION_FACTOR;
   }
 
+  public int getTDENGINE_WAL_LEVEL() {
+    return TDENGINE_WAL_LEVEL;
+  }
+
+  public void setTDENGINE_WAL_LEVEL(int TDENGINE_WAL_LEVEL) {
+    this.TDENGINE_WAL_LEVEL = TDENGINE_WAL_LEVEL;
+  }
+
+  public int getTDENGINE_REPLICA() {
+    return TDENGINE_REPLICA;
+  }
+
+  public void setTDENGINE_REPLICA(int TDENGINE_REPLICA) {
+    this.TDENGINE_REPLICA = TDENGINE_REPLICA;
+  }
+
   public void setIS_DOUBLE_WRITE(boolean IS_DOUBLE_WRITE) {
     this.IS_DOUBLE_WRITE = IS_DOUBLE_WRITE;
   }
@@ -1651,9 +1673,7 @@ public class Config {
         + "\nQUERY_SEED="
         + QUERY_SEED
         + "\nWORKLOAD_BUFFER_SIZE="
-        + WORKLOAD_BUFFER_SIZE
-        + "\nSENSORS="
-        + SENSORS;
+        + WORKLOAD_BUFFER_SIZE;
   }
 
   /** get properties from config, one property in one line. */

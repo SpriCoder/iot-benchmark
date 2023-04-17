@@ -35,6 +35,7 @@ import cn.edu.tsinghua.iot.benchmark.conf.ConfigDescriptor;
 import cn.edu.tsinghua.iot.benchmark.entity.Batch;
 import cn.edu.tsinghua.iot.benchmark.entity.DeviceSummary;
 import cn.edu.tsinghua.iot.benchmark.entity.Record;
+import cn.edu.tsinghua.iot.benchmark.entity.Sensor;
 import cn.edu.tsinghua.iot.benchmark.measurement.Status;
 import cn.edu.tsinghua.iot.benchmark.schema.schemaImpl.DeviceSchema;
 import cn.edu.tsinghua.iot.benchmark.tsdb.DBConfig;
@@ -54,7 +55,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
 public class IoTDBSession extends IoTDBSessionBase {
@@ -96,7 +97,7 @@ public class IoTDBSession extends IoTDBSessionBase {
     int failRecord = 0;
     List<String> sensors =
         batch.getDeviceSchema().getSensors().stream()
-            .map(sensor -> sensor.getName())
+            .map(Sensor::getName)
             .collect(Collectors.toList());
 
     for (Record record : batch.getRecords()) {
@@ -105,7 +106,7 @@ public class IoTDBSession extends IoTDBSessionBase {
           constructDataTypes(
               batch.getDeviceSchema().getSensors(), record.getRecordDataValue().size());
       try {
-        if (config.isTEMPLATE()) {
+        if (config.isVECTOR()) {
           session.insertAlignedRecord(
               deviceId, timestamp, sensors, dataTypes, record.getRecordDataValue());
         } else {
@@ -134,7 +135,7 @@ public class IoTDBSession extends IoTDBSessionBase {
     List<List<Object>> valuesList = new ArrayList<>();
     List<String> sensors =
         batch.getDeviceSchema().getSensors().stream()
-            .map(sensor -> sensor.getName())
+            .map(Sensor::getName)
             .collect(Collectors.toList());
 
     for (Record record : batch.getRecords()) {
@@ -184,8 +185,7 @@ public class IoTDBSession extends IoTDBSessionBase {
     if (!config.isIS_QUIET_MODE()) {
       LOGGER.info("{} query SQL: {}", Thread.currentThread().getName(), executeSQL);
     }
-    AtomicInteger line = new AtomicInteger();
-    AtomicInteger queryResultPointNum = new AtomicInteger();
+    AtomicLong queryResultPointNum = new AtomicLong();
     AtomicBoolean isOk = new AtomicBoolean(true);
 
     try {
@@ -193,11 +193,19 @@ public class IoTDBSession extends IoTDBSessionBase {
       future =
           service.submit(
               () -> {
+                long resultNum = 0;
                 try {
                   SessionDataSet sessionDataSet = session.executeQueryStatement(executeSQL);
                   while (sessionDataSet.hasNext()) {
                     RowRecord rowRecord = sessionDataSet.next();
-                    line.getAndIncrement();
+                    switch (operation) {
+                      case LATEST_POINT_QUERY:
+                        resultNum++;
+                        break;
+                      default:
+                        resultNum += rowRecord.getFields().size();
+                        break;
+                    }
                     if (config.isIS_COMPARISON()) {
                       List<Object> record = new ArrayList<>();
                       switch (operation) {
@@ -229,8 +237,7 @@ public class IoTDBSession extends IoTDBSessionBase {
                   LOGGER.error("exception occurred when execute query={}", executeSQL, e);
                   isOk.set(false);
                 }
-                queryResultPointNum.set(
-                    line.get() * config.getQUERY_SENSOR_NUM() * config.getQUERY_DEVICE_NUM());
+                queryResultPointNum.set(resultNum);
               });
       try {
         future.get(config.getREAD_OPERATION_TIMEOUT_MS(), TimeUnit.MILLISECONDS);
@@ -284,7 +291,7 @@ public class IoTDBSession extends IoTDBSessionBase {
       sql.append(" or time = ").append(record.getTimestamp());
       recordMap.put(record.getTimestamp(), record.getRecordDataValue());
     }
-    int point = 0;
+    long point = 0;
     int line = 0;
     try {
       SessionDataSet sessionDataSet = session.executeQueryStatement(sql.toString());

@@ -23,6 +23,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public enum DBSwitch {
+  DB_IOT_110_JDBC(DBType.IoTDB, DBVersion.IOTDB_110, DBInsertMode.INSERT_USE_JDBC),
+  DB_IOT_110_SESSION_BY_TABLET(
+      DBType.IoTDB, DBVersion.IOTDB_110, DBInsertMode.INSERT_USE_SESSION_TABLET),
+  DB_IOT_110_SESSION_BY_RECORD(
+      DBType.IoTDB, DBVersion.IOTDB_110, DBInsertMode.INSERT_USE_SESSION_RECORD),
+  DB_IOT_110_SESSION_BY_RECORDS(
+      DBType.IoTDB, DBVersion.IOTDB_110, DBInsertMode.INSERT_USE_SESSION_RECORDS),
   DB_IOT_100_JDBC(DBType.IoTDB, DBVersion.IOTDB_100, DBInsertMode.INSERT_USE_JDBC),
   DB_IOT_100_SESSION_BY_TABLET(
       DBType.IoTDB, DBVersion.IOTDB_100, DBInsertMode.INSERT_USE_SESSION_TABLET),
@@ -61,7 +68,8 @@ public enum DBSwitch {
   DB_VICTORIAMETRICS(DBType.VictoriaMetrics, null, null),
   DB_PIARCHIVE(DBType.PIArchive, null, null),
   DB_SQLITE(DBType.SQLite, null, null),
-  DB_IginX(DBType.IginX, null, null);
+  DB_IginX(DBType.IginX, null, null),
+  DB_SelfCheck(DBType.SelfCheck, null, null);
 
   private static final Logger LOGGER = LoggerFactory.getLogger(DBSwitch.class);
   DBType type;

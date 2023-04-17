@@ -38,7 +38,20 @@ public class DBFactory {
     String dbClass = "";
     try {
       switch (dbConfig.getDB_SWITCH()) {
-          // IoTDB 0.14
+          // IoTDB 1.1
+        case DB_IOT_110_JDBC:
+          dbClass = Constants.IOTDB110_JDBC_CLASS;
+          break;
+        case DB_IOT_110_SESSION_BY_TABLET:
+        case DB_IOT_110_SESSION_BY_RECORD:
+        case DB_IOT_110_SESSION_BY_RECORDS:
+          if (config.isIS_ALL_NODES_VISIBLE()) {
+            dbClass = Constants.IOTDB110_ROUNDROBIN_SESSION_CLASS;
+          } else {
+            dbClass = Constants.IOTDB110_SESSION_CLASS;
+          }
+          break;
+          // IoTDB 1.0
         case DB_IOT_100_JDBC:
           dbClass = Constants.IOTDB100_JDBC_CLASS;
           break;
@@ -121,6 +134,9 @@ public class DBFactory {
           break;
         case DB_IginX:
           dbClass = Constants.IGINX_CLASS;
+          break;
+        case DB_SelfCheck:
+          dbClass = Constants.SELF_CHECK_CLASS;
           break;
         default:
           throw new SQLException("didn't support this database");

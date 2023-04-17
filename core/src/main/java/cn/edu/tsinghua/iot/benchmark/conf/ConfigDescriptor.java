@@ -170,6 +170,7 @@ public class ConfigDescriptor {
           case "ms":
             break;
           case "us":
+          case "ns":
             if (config.getDbConfig().getDB_SWITCH().getType() != DBType.IoTDB
                 && config.getDbConfig().getDB_SWITCH().getType() != DBType.InfluxDB) {
               throw new RuntimeException(
@@ -320,6 +321,12 @@ public class ConfigDescriptor {
                 properties.getProperty(
                     "TIMESCALEDB_REPLICATION_FACTOR",
                     config.getTIMESCALEDB_REPLICATION_FACTOR() + "")));
+        config.setTDENGINE_WAL_LEVEL(
+            Integer.parseInt(
+                properties.getProperty("TDENGINE_WAL_LEVEL", config.getTDENGINE_WAL_LEVEL() + "")));
+        config.setTDENGINE_REPLICA(
+            Integer.parseInt(
+                properties.getProperty("TDENGINE_REPLICA", config.getTDENGINE_REPLICA() + "")));
 
         config.setOP_MIN_INTERVAL(
             Long.parseLong(
@@ -594,7 +601,8 @@ public class ConfigDescriptor {
     boolean result = false;
     if (dbConfig.getDB_SWITCH().getType() == DBType.IoTDB) {
       // support iotdb 0.12 & 0.13
-      if (dbConfig.getDB_SWITCH().getVersion() == DBVersion.IOTDB_013
+      if (dbConfig.getDB_SWITCH().getVersion() == DBVersion.IOTDB_100
+          || dbConfig.getDB_SWITCH().getVersion() == DBVersion.IOTDB_013
           || dbConfig.getDB_SWITCH().getVersion() == DBVersion.IOTDB_012) {
         result = true;
       }
